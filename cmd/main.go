@@ -15,6 +15,7 @@ func main() {
 	db := initDB()
 
 	handler.NewChatroomRouter(server, db)
+	handler.NewMemberRouter(server, db)
 
 	log.Fatal(server.Run(":8080"))
 }
@@ -27,5 +28,6 @@ func initDB() *gorm.DB {
 	}
 
 	_ = db.AutoMigrate(entity.Chatroom{})
+	_ = db.AutoMigrate(entity.Member{})
 	return db
 }
