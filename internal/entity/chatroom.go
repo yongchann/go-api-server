@@ -1,4 +1,4 @@
-package domain
+package entity
 
 type Chatroom struct {
 	Id    int64 `gorm:"primaryKey, autoIncrement"`
