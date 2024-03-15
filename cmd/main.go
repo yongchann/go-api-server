@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-api-server/api/handler"
+	"go-api-server/config"
 	"go-api-server/internal/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -21,7 +23,7 @@ func main() {
 }
 
 func initDB() *gorm.DB {
-	dsn := "id:pw@tcp(127.0.0.1:3306)/hama?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/hama?charset=utf8mb4&parseTime=True&loc=Local", config.Get().Db.User, config.Get().Db.Passwrod)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
