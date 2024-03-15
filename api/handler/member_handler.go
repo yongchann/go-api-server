@@ -33,3 +33,19 @@ func (h *MemberHandler) FindByNickname(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, findMember)
 }
+
+func (h *MemberHandler) Login(c *gin.Context) {
+	var newMember entity.Member
+	if err := c.BindJSON(&newMember); err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	accessToken, err := h.memberUseCase.Login(newMember.Nickname, newMember.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.SetCookie("ACCESS_TOKEN", accessToken, 0, "/", "", false, false)
+}

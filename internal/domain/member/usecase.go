@@ -1,6 +1,11 @@
 package member
 
-import "go-api-server/internal/entity"
+import (
+	"github.com/pkg/errors"
+	"go-api-server/internal/entity"
+	"go-api-server/internal/util"
+	"strings"
+)
 
 type UseCase struct {
 	repo entity.MemberRepository
@@ -23,4 +28,16 @@ func (u *UseCase) FindByNickname(nickname string) (*entity.Member, error) {
 		return nil, err
 	}
 	return member, nil
+}
+
+func (u *UseCase) Login(nickname string, password string) (string, error) {
+	findMember, err := u.repo.FindByNickname(nickname)
+	if err != nil {
+		return "", err
+	}
+	if strings.Compare(findMember.Password, password) != 0 {
+		return "", errors.New("wrong password")
+	}
+
+	return util.CretaeJwt(findMember), nil
 }

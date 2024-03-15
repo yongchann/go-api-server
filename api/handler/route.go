@@ -24,6 +24,7 @@ func NewMemberRouter(rg *gin.Engine, db *gorm.DB) {
 	usecase := member.NewUseCase(repo)
 	handler := MemberHandler{memberUseCase: usecase}
 
-	rg.POST("/user", handler.Join)
-	rg.GET("/user/:nickname", handler.FindByNickname)
+	rg.POST("/member", handler.Join)
+	rg.GET("/member/:nickname", handler.FindByNickname)
+	rg.POST("/member/login", handler.Login)
 }

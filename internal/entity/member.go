@@ -17,4 +17,5 @@ type MemberRepository interface {
 type MemberUseCase interface {
 	Join(member *Member) error
 	FindByNickname(nickname string) (*Member, error)
+	Login(nickname string, password string) (string, error)
 }
