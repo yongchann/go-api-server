@@ -30,6 +30,7 @@ type Config struct {
 	Db struct {
 		User     string `yaml:"user"`
 		Passwrod string `yaml:"password"`
+		Address  string `yaml:"address"`
 	} `yaml:"db"`
 
 	Jwt struct {

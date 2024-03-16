@@ -23,7 +23,7 @@ func main() {
 }
 
 func initDB() *gorm.DB {
-	dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/hama?charset=utf8mb4&parseTime=True&loc=Local", config.Get().Db.User, config.Get().Db.Passwrod)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/hama?charset=utf8mb4&parseTime=True&loc=Local", config.Get().Db.User, config.Get().Db.Passwrod, config.Get().Db.Address)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
