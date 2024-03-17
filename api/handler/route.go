@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-api-server/api/middleware"
 	"go-api-server/internal/domain/chatroom"
 	"go-api-server/internal/domain/member"
 	"gorm.io/gorm"
@@ -12,11 +13,14 @@ func NewChatroomRouter(rg *gin.Engine, db *gorm.DB) {
 	usecase := chatroom.NewUseCase(repo)
 	handler := ChatroomHandler{chatroomUseCase: usecase}
 
-	rg.POST("/chatrooms", handler.CreateChatroom)
-	rg.GET("/chatrooms", handler.FetchChatroom)
-	rg.GET("/chatrooms/:id", handler.GetChatroom)
-	rg.PUT("/chatrooms/:id", handler.UpdateChatroom)
-	rg.DELETE("/chatrooms/:id", handler.DeleteChatroom)
+	chatroomRg := rg.Group("/chatrooms").Use(middleware.JwtAuthMiddleware())
+	{
+		chatroomRg.POST("", handler.CreateChatroom)
+		chatroomRg.GET("", handler.FetchChatroom)
+		chatroomRg.GET("/:id", handler.GetChatroom)
+		chatroomRg.PUT("/:id", handler.UpdateChatroom)
+		chatroomRg.DELETE("/:id", handler.DeleteChatroom)
+	}
 }
 
 func NewMemberRouter(rg *gin.Engine, db *gorm.DB) {
@@ -24,7 +28,10 @@ func NewMemberRouter(rg *gin.Engine, db *gorm.DB) {
 	usecase := member.NewUseCase(repo)
 	handler := MemberHandler{memberUseCase: usecase}
 
-	rg.POST("/member", handler.Join)
-	rg.GET("/member/:nickname", handler.FindByNickname)
-	rg.POST("/member/login", handler.Login)
+	memberRg := rg.Group("/members")
+	{
+		memberRg.POST("/", handler.Join)
+		memberRg.GET("/:nickname", handler.FindByNickname)
+		memberRg.POST("/login", handler.Login)
+	}
 }

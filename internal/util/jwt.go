@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/golang-jwt/jwt"
+	"github.com/pkg/errors"
 	"go-api-server/config"
 	"log"
 	"time"
@@ -19,4 +20,22 @@ func CretaeJwt(info any) string {
 		return ""
 	}
 	return sTkn
+}
+
+func ParseJwtToken(signedToken string) (map[string]interface{}, error) {
+	token, err := jwt.Parse(signedToken, jwtKeyFunc)
+	if err != nil {
+		return nil, errors.New("failed to parse token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("invalid token claims")
+	}
+
+	return claims, nil
+}
+
+func jwtKeyFunc(token *jwt.Token) (interface{}, error) {
+	return []byte(config.Get().Jwt.SecretKey), nil
 }
